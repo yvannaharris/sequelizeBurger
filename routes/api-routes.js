@@ -12,11 +12,11 @@ var db = require("../models");
 // =============================================================
 module.exports = function(app) {
   // GET route for getting all of the todos
-  app.get("/", function(req, res) {
+  app.get("/api", function(req, res) {
     // findAll returns all entries for a table when used with no options
     db.Burger.findAll({}).then(function(dbBurger) {
       // We have access to the todos as an argument inside of the callback function
-    res.render('index',dbBurger);
+    res.json(dbBurger);
     });
   });
 
@@ -30,7 +30,7 @@ module.exports = function(app) {
       devoured: req.body.devoured
     }).then(function(dbBurger) {
       // We have access to the new todo as an argument inside of the callback function
-      res.redirect('/');
+      res.redirect("/");
     });
   });
 
@@ -44,7 +44,7 @@ module.exports = function(app) {
       }
     }).then(function(dbBurger) {
 
-      res.redirect("/");
+      res.json(dbBurger);
     });
 
   });
@@ -62,7 +62,7 @@ module.exports = function(app) {
       }
     }).then(function(dbBurger) {
 
-      res.redirect("/");
+      res.json(dbBurger);
     });
   });
 
