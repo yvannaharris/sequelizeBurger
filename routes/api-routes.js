@@ -30,7 +30,7 @@ module.exports = function(app) {
       devoured: req.body.devoured
     }).then(function(dbBurger) {
       // We have access to the new todo as an argument inside of the callback function
-      res.redirect("/");
+      res.json(dbBurger);
     });
   });
 
