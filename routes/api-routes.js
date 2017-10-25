@@ -12,7 +12,7 @@ var db = require("../models");
 // =============================================================
 module.exports = function(app) {
   // GET route for getting all of the todos
-  app.get("/api", function(req, res) {
+  app.get("/api/burgers", function(req, res) {
     // findAll returns all entries for a table when used with no options
     db.Burger.findAll({}).then(function(dbBurger) {
       // We have access to the todos as an argument inside of the callback function
