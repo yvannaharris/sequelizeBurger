@@ -29,7 +29,7 @@ app.set("view engine", "handlebars");
 
 
 // Static directory
-app.use(express.static("viewss"));
+app.use(express.static("views"));
 
 // Routes
 // =============================================================
