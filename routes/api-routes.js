@@ -1,69 +1,76 @@
-// *********************************************************************************
-// api-routes.js - this file offers a set of routes for displaying and saving data to the db
-// *********************************************************************************
-
-// Dependencies
-// =============================================================
-
-// Requiring our models
+var express = require("express");
 var db = require("../models");
 
-// Routes
-// =============================================================
 module.exports = function(app) {
-  // GET route for getting all of the todos
-  app.get("/api/burgers", function(req, res) {
-    // findAll returns all entries for a table when used with no options
-    db.Burger.findAll({}).then(function(dbBurger) {
-      // We have access to the todos as an argument inside of the callback function
-    res.json(dbBurger);
-    });
+
+  app.get("/", function(req, res) {
+    db.Burger.findAll({
+      where: {},
+      include: [{
+        model: db.Customer
+      }]
+    }).then(function(dbBurger) {
+      console.log(dbBurger);
+      var burgerObj = {burgers: dbBurger};
+      res.render("index", burgerObj);
+    })
   });
 
-  // POST route for saving a new todo
-  app.post("/api/burgers", function(req, res) {
-    // create takes an argument of an object describing the item we want to
-    // insert into our table. In this case we just we pass in an object with a text
-    // and complete property
+  app.post("/", function(req.res) {
     db.Burger.create({
-      burger_name: req.body.burger_name,
-      devoured: req.body.devoured
+      burger_name: req.body.name
     }).then(function(dbBurger) {
-      // We have access to the new todo as an argument inside of the callback function
       res.redirect("/");
     });
   });
 
-  // DELETE route for deleting todos. We can get the id of the todo to be deleted from
-  // req.params.id
-  app.delete("/api/burgers/:id", function(req, res) {
-    // We just have to specify which todo we want to destroy with "where"
-    db.Burger.destroy({
-      where: {
-        id: req.params.id
+  app.post("/:id", function(req, res) {
+    var customerName = req.body.customer;
+    var burgerId = req.params.id;
+    var resVar = res;
+    db.Customer.findAll({
+
+    }).then(function(dbCustomers) {
+      var flag = false;
+      for(var i; i< dbCustomers.length; i++) {
+        if(customerName === dbCustomer[i].name) {
+          flag = true;
+        } else {
+          console.log("No cusotmers match");
+        }
       }
-    }).then(function(dbBurger) {
 
-      res.json(dbBurger);
-    });
-
-  });
-
-  // PUT route for updating todos. We can get the updated todo data from req.body
-  app.put("/api/burgers", function(req, res) {
-    // Update takes in an object describing the properties we want to update, and
-    // we use where to describe which objects we want to update
-    db.Burger.update({
-      burger_name: req.body.burger_name,
-      devoured: req.body.devoured
-    }, {
-      where: {
-        id: req.body.id
+      if(!flag) {
+        db.Customer.create({
+          name: customerName
+        }).then(function(dbCreate) {
+          burgerUpdate(cusotmerName, burgerId, resVar);
+        });
+      } else {
+        burgerUpdate(customerName, burgerId, resVar);
       }
-    }).then(function(dbBurger) {
-
-      res.json(dbBurger);
     });
   });
 
-};
+  function burgerUpdate(customerName, burgerId, resVar) {
+    db.Customer.findOne({
+      where: {
+        name: cusotmerName
+      }
+    }).then(function(dbCustomer) {
+      var id = dbCustomer.id;
+      db.Burger.update(
+      {
+        devoured: true;
+        CustomerId: id
+      },
+      {
+        where: {
+          id: burgerId
+        }
+      }).then(function(dbBurger) {
+        resVar.redirect("/");
+      });
+    });
+  };
+}
