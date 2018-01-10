@@ -16,7 +16,7 @@ module.exports = function(app) {
     })
   });
 
-  app.post("/", function(req.res) {
+  app.post("/", function(req,res) {
     db.Burger.create({
       burger_name: req.body.name
     }).then(function(dbBurger) {
@@ -44,7 +44,7 @@ module.exports = function(app) {
         db.Customer.create({
           name: customerName
         }).then(function(dbCreate) {
-          burgerUpdate(cusotmerName, burgerId, resVar);
+          burgerUpdate(customerName, burgerId, resVar);
         });
       } else {
         burgerUpdate(customerName, burgerId, resVar);
@@ -55,14 +55,13 @@ module.exports = function(app) {
   function burgerUpdate(customerName, burgerId, resVar) {
     db.Customer.findOne({
       where: {
-        name: cusotmerName
+        name: customerName
       }
     }).then(function(dbCustomer) {
       var id = dbCustomer.id;
       db.Burger.update(
       {
-        devoured: true;
-        CustomerId: id
+        devoured: true
       },
       {
         where: {
